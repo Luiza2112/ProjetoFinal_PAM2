@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,18 +10,34 @@ using AppFeedback.Services;
 
 namespace AppFeedback.ViewModels
 {
+    [QueryProperty("FeedbackSelecionadoId", "fId")]
     public class CadastroFeedbackViewModel : BaseViewModel
     {
         private FeedbackService fService;
         public ICommand SalvarCommand { get; }
+        public ICommand CancelarCommand { get; set; }
 
         public CadastroFeedbackViewModel()
         {
             string token = Preferences.Get("UsuarioToken", string.Empty);
             fService = new FeedbackService(token);
 
+            SalvarCommand = new Command(async () => { await SalvarFeedback(); });
+            CancelarCommand = new Command(async => CancelarCadastro());
         }
-        public int id
+
+        private async void CancelarCadastro()
+        {
+            await Shell.Current.GoToAsync("..");
+        }
+
+        private int id;
+        private string remetente;
+        private string destinatario;
+        private string descricao;
+        private DateTime data;
+
+        public int Id
         {
             get => id;
             set
@@ -30,7 +47,7 @@ namespace AppFeedback.ViewModels
             }
         }
 
-        public string remetente
+        public string Remetente
         {
             get => remetente;
             set
@@ -40,7 +57,7 @@ namespace AppFeedback.ViewModels
             }
         }
 
-        public string destinatario
+        public string Destinatario
         {
             get => destinatario;
             set
@@ -50,7 +67,7 @@ namespace AppFeedback.ViewModels
             }
         }
 
-        public string descricao
+        public string Descricao
         {
             get => descricao;
             set
@@ -60,7 +77,7 @@ namespace AppFeedback.ViewModels
             }
         }
 
-        public DateTime data
+        public DateTime Data
         {
             get => data;
             set
@@ -76,26 +93,64 @@ namespace AppFeedback.ViewModels
             {
                 Feedback model = new Feedback()
                 {
-                    Id = this.id,
                     Remetente = this.remetente,
                     Destinatario = this.destinatario,
                     Descricao = this.descricao,
-                    Data = this.data
+                    Data = this.data,
+                    Id = this.id
                 };
                 if (model.Id == 0)
                 {
                     await fService.PostFeedbackAsync(model);
 
-                    await Application.Current.MainPage
+                }
+                else
+                {
+                    await fService.PutFeedbackAsync(model);
+                }
+
+                await Application.Current.MainPage
                         .DisplayAlert("Mensagem", "Dados salvos com sucesso!", "Ok");
 
-                    await Shell.Current.GoToAsync(".."); // Remove a página atual da pilha de páginas
-                }
             }
             catch (Exception ex)
             {
                 await Application.Current.MainPage
                     .DisplayAlert("Ops", ex.Message + " Detalhes: " + ex.InnerException, "Ok");
+            }
+        }
+
+        public async void CarregarFeedback()
+        {
+            try
+            {
+                Feedback f = await
+                    fService.GetFeedbackAsync(int.Parse(feedbackSelecionadoId));
+
+                this.remetente = f.Remetente;
+                this.destinatario = f.Destinatario;
+                this.descricao = f.Descricao;
+                this.data = f.Data;
+                this.id = f.Id;
+
+            }
+            catch (Exception ex)
+            {
+                await Application.Current.MainPage
+                    .DisplayAlert("Ops", ex.Message + " Detalhes: " + ex.InnerException, "Ok");
+            }
+        }
+
+        private string feedbackSelecionadoId;
+        public string FeedbackSelecionadoId
+        {
+            set
+            {
+                if (value != null)
+                {
+                    feedbackSelecionadoId = Uri.UnescapeDataString(value);
+                    CarregarFeedback();
+                }
             }
         }
 

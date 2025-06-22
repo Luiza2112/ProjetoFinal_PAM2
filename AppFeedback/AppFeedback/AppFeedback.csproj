@@ -64,6 +64,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Views\CadastroFeedbackView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\ListagemFeedbackView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

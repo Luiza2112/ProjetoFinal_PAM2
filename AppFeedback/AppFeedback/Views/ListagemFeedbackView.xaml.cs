@@ -4,7 +4,7 @@ namespace AppFeedback.Views;
 
 public partial class ListagemFeedbackView : ContentPage
 {
-    ListagemFeedbackViewModel viewModel;
+    private ListagemFeedbackViewModel viewModel;
     public ListagemFeedbackView()
 	{
 		InitializeComponent();
@@ -13,4 +13,15 @@ public partial class ListagemFeedbackView : ContentPage
         BindingContext = viewModel;
         Title = "Feedbacks - App Feedbacks TCC";
     }
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+
+        if (BindingContext is ListagemFeedbackViewModel vm)
+        {
+            await vm.ObterFeedbacks();
+        }
+    }
+
 }
