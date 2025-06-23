@@ -12,14 +12,11 @@
             <Label Text="Remetente" FontSize="Medium"/>
             <Entry Text="{Binding Remetente}" FontSize="Medium"/>
 
-            <Label Text="Destinatario" FontSize="Medium"/>
+            <Label Text="Destinatário" FontSize="Medium"/>
             <Entry Text="{Binding Destinatario}" FontSize="Medium"/>
 
-            <Label Text="Descricao" FontSize="Medium"/>
+            <Label Text="Descrição" FontSize="Medium"/>
             <Entry Text="{Binding Descricao}" FontSize="Medium"/>
-
-            <Label Text="Data" FontSize="Medium"/>
-            <Label Text="{Binding Data}" IsEnabled="False" FontSize="Medium"/>
 
             <HorizontalStackLayout Spacing="20">
                 <Button Text="Salvar" Command="{Binding SalvarFeedback}"></Button>

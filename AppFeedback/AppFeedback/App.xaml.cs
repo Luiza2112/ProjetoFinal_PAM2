@@ -6,7 +6,8 @@
         {
             InitializeComponent();
 
-            MainPage = new NavigationPage(new Views.ListagemFeedbackView());
+            //MainPage = new NavigationPage(new Views.ListagemFeedbackView());
+            MainPage = new AppShell();
 
         }
     }

@@ -11,7 +11,7 @@ namespace AppFeedback.Services
     public class FeedbackService : Request
     {
         private readonly Request _request;
-        private const string apiUrlBase = ""; // -> Criar Azure web com a API de Feedback e colocar link url aqui
+        private const string apiUrlBase = "https://apifeedbacks.azurewebsites.net/Feedbacks"; // -> Criar Azure web com a API de Feedback e colocar link url aqui
 
         private string _token;
         public FeedbackService(string token)
